@@ -1,0 +1,78 @@
+import glob
+import pandas as pd
+
+# glob.glob('data*.csv') - returns List[str]
+# pd.read_csv(f) - returns pd.DataFrame()
+# for f in glob.glob() - returns a List[DataFrames]
+# pd.concat() - returns one pd.DataFrame()
+
+df_GroupA = pd.concat([pd.read_csv(f, sep = ",", encoding="latin-1") for f in glob.glob(r"C:\Users\ijeke\Documents\Datasets\Pipeline throughput\Pipeline textfiles\Group A\*.txt")], ignore_index = True)
+
+
+## drop duplicate values
+
+df_GroupA.drop_duplicates(inplace=True)
+
+
+## rename and drop columns as required
+
+df_GroupA.rename(columns={'Capacity (1000 m3/d)': 'Available Capacity (1000 m3/d)'}, inplace = True)
+
+
+
+
+## add new column Product to GroupA dataframe with default Natural Gas
+
+df_GroupA['Product']= 'natural gas'
+
+
+df_Pipelines = df_GroupA
+
+## create required dimension tables
+
+df_PipelineCoInfo = df_Pipelines[['Pipeline Name', 'Corporate Entity']].drop_duplicates(inplace=False)
+
+df_TradeType = df_Pipelines[['Trade Type']].drop_duplicates(inplace=False)
+
+df_Product = df_Pipelines[['Product']].drop_duplicates(inplace=False)
+
+df_Pipeline = df_Pipelines[['Pipeline Name']].drop_duplicates(inplace=False)
+
+## based on data, replace Error value with intracanada
+
+df_Pipelines.replace(to_replace = "`" , value="intracanada", inplace=True)
+
+## rerun this dataframe to get rid of the error `
+df_TradeType = df_Pipelines[['Trade Type']].drop_duplicates(inplace=False)
+
+df_KeyPoint = df_Pipelines[['Key Point']].drop_duplicates(inplace=False)
+ 
+## rename Month column as MonthSort
+df_Pipelines.rename(columns={'Month':'MonthSort'}, inplace=True)
+
+## Create a new month dataframe table
+
+st = pd.Series(range(1,13)) ## month numbers
+
+data = {'MonthSort': st, 'Month':['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']}
+Month_df = pd.DataFrame(data)
+
+left = Month_df
+right = df_Pipelines
+
+PipelinesThroughputCapacity_df = pd.merge(left,right, how='right', on= 'MonthSort', sort=False, left_index = False, right_index=True, validate= "1:m")
+
+## add month year, monthyearsort columns and reset index
+
+PipelinesThroughputCapacity_df['MonthYear'] = PipelinesThroughputCapacity_df['Month'].map(str) + " " + PipelinesThroughputCapacity_df['Year'].map(str)
+
+## change format of monthsort to two digits
+PipelinesThroughputCapacity_df['MonthYearSort'] = PipelinesThroughputCapacity_df['Year'].map(str) + PipelinesThroughputCapacity_df['MonthSort'].map(str).str.zfill(2)
+
+PipelinesThroughputCapacity_df.reset_index (inplace=True)
+
+## add an Alternate Date Column to the data 
+
+## change format of monthsort to two digits
+PipelinesThroughputCapacity_df['Alternate Date'] = PipelinesThroughputCapacity_df['Year'].map(str) + PipelinesThroughputCapacity_df['MonthSort'].map(str).str.zfill(2) + PipelinesThroughputCapacity_df['Date'].map(str).str.zfill(2) 
+
