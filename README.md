@@ -25,7 +25,7 @@ Group B for all the other pipelines
 
 ### 3. Additional exploratory data analysis of oil and natural gas pipeline throughput and capacity using python.
 
-[Run this python script](https://github.com/IjeomaOdoko/Natural-Gas-Pipeline-Report/blob/master/Pipeline%20throughput%20dataframe%20and%20charts%20using%20pandas.ipynb)
+[View this python script](https://github.com/IjeomaOdoko/Natural-Gas-Pipeline-Report/blob/master/Pipeline%20throughput%20dataframe%20and%20charts%20using%20pandas.ipynb)
 
 
 Data Sources: https://open.canada.ca/data/en/dataset/dc343c43-a592-4a27-8ee7-c77df56afb34
