@@ -7,6 +7,7 @@ Data Visualization project in Power BI, including exploring and shaping data wit
 ### 2. Explore the Power BI visualization: 
 
 Download the datasets from the Open Canada Website in two separate folders. 
+
 Group A for only the natural gas pipelines
     NGTL System pipeline 
     Canadian Mainline 
